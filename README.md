@@ -26,4 +26,3 @@ Tecnologias Utilizadas
 
 Frontend: HTML, CSS, JavaScript
 
-Frameworks & Bibliotecas: Bootstrap, FontAwesome, Chart.js
