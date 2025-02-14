@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskPro - Gerenciador de Tempo e Produtividade</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <header class="bg-primary text-white py-3">
+        <div class="container d-flex justify-content-between align-items-center">
+            <h1 class="mb-0">TaskPro</h1>
+            <nav>
+                <ul class="nav">
+                    <li class="nav-item"><a class="nav-link text-white" href="#dashboard">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#tarefas">Tarefas</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#metas">Metas</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#relatorios">Relatórios</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#configuracoes">Configurações</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#sobre">Sobre</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#" id="help-button"><i class="fas fa-question-circle"></i> Ajuda</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container my-5">
+        <section id="dashboard" class="mb-5">
+            <h2 class="mb-4">Visão Geral</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Progresso das Tarefas</h5>
+                            <div class="progress mb-3">
+                                <div id="task-progress-bar" class="progress-bar bg-success" role="progressbar" style="width: 70%;" aria-valuemin="0" aria-valuemax="100" aria-valuenow="70">70%</div>
+                            </div>
+                            <h5 class="card-title">Metas Concluídas</h5>
+                            <div class="progress">
+                                <div id="goal-progress-bar" class="progress-bar bg-info" role="progressbar" style="width: 50%;" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">50%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Distribuição de Tarefas por Categoria</h5>
+                            <canvas id="categoryChart"></canvas>
+                            <p class="text-muted mt-3">Este gráfico mostra a distribuição das tarefas entre diferentes categorias, ajudando a identificar áreas prioritárias.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tarefas" class="mb-5">
+            <h2 class="mb-4">Lista de Tarefas</h2>
+            <ul class="list-group mb-4" id="task-list">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    Tarefa 1 - <span>Em andamento</span>
+                    <div>
+                        <button class="btn btn-sm btn-warning me-2 edit-task">Editar</button>
+                        <button class="btn btn-sm btn-danger remove-task">Remover</button>
+                    </div>
+                </li>
+            </ul>
+            <form id="task-form" class="d-flex gap-3">
+                <input type="text" id="new-task" class="form-control" placeholder="Nova tarefa" required>
+                <button type="submit" class="btn btn-primary">Adicionar</button>
+            </form>
+        </section>
+
+        <section id="metas" class="mb-5">
+            <h2 class="mb-4">Definição de Metas</h2>
+            <form id="goal-form" class="mb-4">
+                <div class="mb-3">
+                    <label for="meta-nome" class="form-label">Nome da Meta:</label>
+                    <input type="text" id="meta-nome" class="form-control" placeholder="Ex: Finalizar projeto" required>
+                </div>
+                <div class="mb-3">
+                    <label for="meta-descricao" class="form-label">Descrição:</label>
+                    <textarea id="meta-descricao" class="form-control" placeholder="Detalhes sobre a meta"></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="meta-data" class="form-label">Prazo:</label>
+                    <input type="date" id="meta-data" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="meta-prioridade" class="form-label">Prioridade:</label>
+                    <select id="meta-prioridade" class="form-select">
+                        <option value="Alta">Alta</option>
+                        <option value="Média">Média</option>
+                        <option value="Baixa">Baixa</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Adicionar Meta</button>
+            </form>
+        </section>
+
+        <section id="relatorios" class="mb-5">
+            <h2 class="mb-4">Relatórios de Produtividade</h2>
+            <ul class="list-group">
+                <li class="list-group-item">Tempo total em tarefas: <span id="total-task-time">15h</span></li>
+                <li class="list-group-item">Metas concluídas: <span id="completed-goals">2 de 4</span></li>
+            </ul>
+        </section>
+
+        <section id="configuracoes" class="mb-5">
+            <h2 class="mb-4">Configurações</h2>
+            <form id="settings-form">
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="notificacoes">
+                    <label for="notificacoes" class="form-check-label">Notificações</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="dark-mode">
+                    <label for="dark-mode" class="form-check-label">Tema Escuro</label>
+                </div>
+                <div class="mb-3">
+                    <label for="font-size" class="form-label">Tamanho da Fonte:</label>
+                    <select id="font-size" class="form-select">
+                        <option value="small">Pequeno</option>
+                        <option value="medium" selected>Médio</option>
+                        <option value="large">Grande</option>
+                    </select>
+                </div>
+                <button type="reset" class="btn btn-secondary">Restaurar Configurações</button>
+            </form>
+        </section>
+
+        <section id="sobre" class="mb-5">
+            <h2 class="mb-4">Sobre o TaskPro</h2>
+            <p>O TaskPro é uma ferramenta completa para gerenciar seu tempo e aumentar a produtividade. Com funcionalidades como listas de tarefas, definição de metas e relatórios detalhados, o TaskPro ajuda você a organizar sua rotina de forma eficiente.</p>
+            <ul>
+                <li>Gerencie suas tarefas diárias, semanais e mensais.</li>
+                <li>Defina metas e acompanhe seu progresso.</li>
+                <li>Receba notificações e lembretes importantes.</li>
+                <li>Integre com seu calendário para uma organização completa.</li>
+            </ul>
+        </section>
+    </main>
+
+    <footer class="bg-light text-center py-3">
+        <p class="mb-0">&copy; 2025 TaskPro. Todos os direitos reservados.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
